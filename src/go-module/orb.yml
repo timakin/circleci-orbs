@@ -17,21 +17,21 @@ examples:
 commands:
   restore:
     steps:
-      restore_cache:
-        name: Restore go modules cache
-        key: go-mod-cache-{{ .Branch }}-{{ checksum "go.sum" }}
+      - restore_cache:
+          name: Restore go modules cache
+          key: go-mod-cache-{{ .Branch }}-{{ checksum "go.sum" }}
   download:
     steps:
-      run:
-        name: Downloading packages
-        command: go mod download
+      - run:
+          name: Downloading packages
+          command: go mod download
   save:
     steps:
-      save_cache:
-        name: Saving Cache
-        key: go-mod-cache-{{ .Branch }}-{{ checksum "go.sum" }}
-        paths:
-          - "/go/pkg/mod/cache"
+      - save_cache:
+          name: Saving Cache
+          key: go-mod-cache-{{ .Branch }}-{{ checksum "go.sum" }}
+          paths:
+            - "/go/pkg/mod/cache"
   vendor:
     parameters:
       vendoring:
@@ -39,12 +39,12 @@ commands:
         type: boolean
         default: false
     steps:
-      run:
-        name: Vendoring
-        command: |
-          if << parameters.vendoring >>; then
-            go mod vendor
-          fi
+      - run:
+          name: Vendoring
+          command: |
+            if << parameters.vendoring >>; then
+              go mod vendor
+            fi
 
 jobs:
   run:
@@ -71,4 +71,4 @@ jobs:
       - download
       - save
       - vendor:
-        vendoring: << parameters.vendoring >>
+          vendoring: << parameters.vendoring >>
