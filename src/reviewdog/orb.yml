@@ -34,7 +34,10 @@ commands:
               go get -u -v << parameters.linters >>
             fi
       - run:
-          name: Run reviewdog
+          name: Install reviewdog
           command: |
             go get -u github.com/haya14busa/reviewdog/cmd/reviewdog
+      - run:
+          name: Run reviewdog
+          command: |
             reviewdog -reporter="github-pr-review"
