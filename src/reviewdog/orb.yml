@@ -13,7 +13,6 @@ examples:
             - image: circleci/golang:1.11.1-stretch
           environment:
             - GO111MODULE: "on"
-
           steps:
             - checkout
             - reviewdog/review:
