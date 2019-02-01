@@ -12,12 +12,12 @@ examples:
           - image: circleci/golang:1.11.1-stretch
         steps:
           - checkout
-          - go-module/run:
+          - go-module/download:
             app_name: go-project
             vendoring: true
 
 commands:
-  run:
+  download:
     parameters:
       vendoring:
         description: "Whether the job should call `go mod vendor` in steps."
