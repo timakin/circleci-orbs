@@ -8,13 +8,14 @@ examples:
       orbs:
         go-module: timakin/go-module@volatile
       jobs:
-        docker:
-          - image: circleci/golang:1.11.1-stretch
-        steps:
-          - checkout
-          - go-module/download:
-            app_name: go-project
-            vendoring: true
+        setup:
+          docker:
+            - image: circleci/golang:1.11.1-stretch
+          steps:
+            - checkout
+            - go-module/download:
+                app_name: go-project
+                vendoring: true
 
 commands:
   download:
