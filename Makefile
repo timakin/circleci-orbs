@@ -5,4 +5,4 @@ GO_MODULE_TAG := 0.0.1
 
 .PHONY: publish
 publish:
-	${PUBLISH_CMD} src/go-module/orb.yml timakin/go-module@${GO_MODULE_TAG}
+	${PUBLISH_CMD} src/go-module/orb.yml timakin/go-module@${GO_MODULE_TAG} --token ${CIRCLE_API_TOKEN}
