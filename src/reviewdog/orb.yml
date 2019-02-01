@@ -1,0 +1,41 @@
+version: 2.1
+
+examples:
+  reviewdog:
+    description: "Usage of timakin/reviewdog orb"
+    usage:
+      version: 2.1
+      orbs:
+        reviewdog: timakin/reviewdog@volatile
+      jobs:
+        setup:
+          docker:
+            - image: circleci/golang:1.11.1-stretch
+          environment:
+            - GO111MODULE: "on"
+
+          steps:
+            - checkout
+            - reviewdog/review:
+                linters: "golang.org/x/lint/golint github.com/kisielk/errcheck"        
+
+commands:
+  review:
+    description: "Runs the reviewdog"
+    parameters:
+      linters:
+        description: "fetch linter tools go get URL."
+        type: string
+        default: ""
+    steps:
+      - run:
+          name: Fetch linters
+          command: |
+            if [[ -n "<< parameters.linters >>" ]]; then
+              go get -u -v << parameters.linters >>
+            fi
+      - run:
+          name: Run reviewdog
+          command: |
+            go get -u github.com/haya14busa/reviewdog/cmd/reviewdog
+            reviewdog -reporter="github-pr-review"
