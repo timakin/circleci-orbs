@@ -35,5 +35,7 @@ workflows:
   version: 2
   main:
     jobs:
-      - build
-      - lint
+      - build:
+          context: org-global
+      - lint:
+          context: org-global
