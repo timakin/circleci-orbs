@@ -6,8 +6,8 @@ REVIEWDOG_TAG := 0.0.1
 
 .PHONY: publish-go-module
 publish-go-module:
-	${PUBLISH_CMD} src/go-module/orb.yml timakin/go-module@${GO_MODULE_TAG} --token ${CIRCLE_API_TOKEN} 2>/dev/null
+	${PUBLISH_CMD} src/go-module/orb.yml timakin/go-module@${GO_MODULE_TAG} --token ${CIRCLE_API_TOKEN}
 
 .PHONY: reviewdog
 publish-reviewdog:
-	${PUBLISH_CMD} src/reviewdog/orb.yml timakin/reviewdog@${REVIEWDOG_TAG} --token ${CIRCLE_API_TOKEN} 2>/dev/null
+	${PUBLISH_CMD} src/reviewdog/orb.yml timakin/reviewdog@${REVIEWDOG_TAG} --token ${CIRCLE_API_TOKEN}
