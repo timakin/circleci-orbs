@@ -46,7 +46,7 @@ jobs:
       - checkout
       - install_yamllint
       - run_yamllint
-      
+
 workflows:
   version: 2
   main:
