@@ -14,7 +14,7 @@ examples:
           steps:
             - checkout
             - go-module/setup:
-                app_name: go-project
+                project_name: go-project
                 vendoring: true
 
 commands:
