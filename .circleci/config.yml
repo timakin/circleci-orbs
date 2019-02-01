@@ -32,9 +32,15 @@ commands:
           name: Run yamllint
           command: |
             yamllint .
+  publish:
+    steps:
+      - run:
+          name: Publish Orbs
+          command: |
+            make publish
 
 jobs:
-  build:
+  validate:
     executor: cli
     parallelism: 4
     steps:
@@ -46,12 +52,24 @@ jobs:
       - checkout
       - install_yamllint
       - run_yamllint
-
+  publish:
+    executor: cli
+    steps:
+      - checkout
+      - publish
 workflows:
   version: 2
   main:
     jobs:
-      - build:
+      - validate:
           context: org-global
       - lint:
           context: org-global
+      - publish:
+          context: org-global
+          requires:
+            - validate
+            - lint
+          filters:
+            branches:
+              only: master
