@@ -1,14 +1,16 @@
 version: 2.1
 
-jobs:
-  build:
+executors:
+  cli:
     docker:
       - image: circleci/circleci-cli:latest
-    parallelism: 4
+  python:
+    docker:
+      - image: python:3.7.0-alpine3.8
+
+commands:
+  validate_orb:
     steps:
-      - checkout
-      - setup_remote_docker:
-          version: 18.06.0-ce
       - run:
           name: Validate orb yaml files
           command: |
@@ -18,19 +20,33 @@ jobs:
               echo "Validating $f ..."
               circleci orb validate $f
             done
-  lint:
-    docker:
-      - image: python:3.7.0-alpine3.8
+  install_yamllint:
     steps:
-      - checkout
       - run:
           name: Install yamllint
           command: |
             pip3 install -U -v yamllint
+  run_yamllint:
+    steps:
       - run:
           name: Run yamllint
           command: |
             yamllint .
+
+jobs:
+  build:
+    executor: cli
+    parallelism: 4
+    steps:
+      - checkout
+      - validate_orb
+  lint:
+    executor: python
+    steps:
+      - checkout
+      - install_yamllint
+      - run_yamllint
+      
 workflows:
   version: 2
   main:
