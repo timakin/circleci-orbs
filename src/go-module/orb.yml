@@ -64,6 +64,8 @@ jobs:
         default: false
     docker:
       - image: "golang:<< parameters.tag >>"
+    environment:
+      - GO111MODULE: "on"
     working_directory: "<< parameters.working_directory >>"
     steps:
       - checkout
