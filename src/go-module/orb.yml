@@ -7,70 +7,41 @@ examples:
       version: 2.1
       orbs:
         go-module: timakin/go-module@volatile
-      workflows:
-        build:
-          jobs:
-            - go-module/run:
-                tag: "1.11.1-stretch"
-                working_directory: "/path/to/gopath"
+      jobs:
+        docker:
+          - image: circleci/golang:1.11.1-stretch
+        steps:
+          - checkout
+          - go-module/run:
+            app_name: go-project
+            vendoring: true
 
 commands:
-  restore:
-    steps:
-      - restore_cache:
-          name: Restore go modules cache
-          key: go-mod-cache-{{ .Branch }}-{{ checksum "go.sum" }}
-  download:
-    steps:
-      - run:
-          name: Downloading packages
-          command: go mod download
-  save:
-    steps:
-      - save_cache:
-          name: Saving Cache
-          key: go-mod-cache-{{ .Branch }}-{{ checksum "go.sum" }}
-          paths:
-            - "/go/pkg/mod/cache"
-  vendor:
+  run:
     parameters:
       vendoring:
         description: "Whether the job should call `go mod vendor` in steps."
         type: boolean
         default: false
+      project_name:
+        description: "Built project name"
+        type: string
+        default: go-mod-cache
     steps:
+      - restore_cache:
+          name: Restore go modules cache
+          key: << parameters.project_name >>-{{ .Branch }}-{{ checksum "go.sum" }}
+      - run:
+          name: Downloading packages
+          command: go mod download
+      - save_cache:
+          name: Saving Cache
+          key: << parameters.project_name >>-{{ .Branch }}-{{ checksum "go.sum" }}
+          paths:
+            - "/go/pkg/mod/cache"
       - run:
           name: Vendoring
           command: |
             if << parameters.vendoring >>; then
               go mod vendor
             fi
-
-jobs:
-  run:
-    description: "Runs the Go Module"
-    parameters:
-      tag:
-        description: "The tag to use on the golang image"
-        type: string
-        default: "1.11.1-stretch"
-      working_directory:
-        description: "Directory to run the steps."
-        type: string
-        default: "~/project"
-      vendoring:
-        description: "Whether the job should call `go mod vendor` in steps."
-        type: boolean
-        default: false
-    docker:
-      - image: "golang:<< parameters.tag >>"
-    environment:
-      - GO111MODULE: "on"
-    working_directory: "<< parameters.working_directory >>"
-    steps:
-      - checkout
-      - restore
-      - download
-      - save
-      - vendor:
-          vendoring: << parameters.vendoring >>
