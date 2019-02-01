@@ -17,7 +17,7 @@ examples:
           steps:
             - checkout
             - reviewdog/review:
-                linters: "golang.org/x/lint/golint github.com/kisielk/errcheck"        
+                linters: "golang.org/x/lint/golint github.com/kisielk/errcheck"
 
 commands:
   review:
