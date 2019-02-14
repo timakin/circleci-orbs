@@ -1,0 +1,49 @@
+description: >
+  Download Go packages referenced from your project.
+  Using cache, CircleCI will run `go mod download` as efficient as it could.
+executor: <<parameters.executor>>
+
+parameters:
+  executor:
+    description: executor to use for this job
+    type: executor
+    default: default
+  checkout:
+    description: >
+      Boolean for whether or not to checkout as a first step. Default is true.
+    type: boolean
+    default: true
+  vendoring:
+    description: >
+      Boolean for whether or not to run `go mod vendor`. Default is false.
+    type: boolean
+    default: false
+  attach-workspace:
+    description: >
+      Boolean for whether or not to attach to an existing workspace. Default
+      is false.
+    type: boolean
+    default: false
+  persist-to-workspace:
+    description: >
+      Boolean for whether or not to persist to a workspace. Default
+      is false.
+    type: boolean
+    default: false
+  workspace-root:
+    description: >
+      Workspace root path that is either an absolute path or a path relative
+      to the working directory. Defaults to '.' (the working directory)
+    type: string
+    default: "."
+
+steps:
+  - download:
+      checkout: << parameters.checkout >>
+      vendoring: << parameters.vendoring >>
+      attach-workspace: << parameters.attach-workspace >>
+      persist-to-workspace: << parameters.persist-to-workspace >>
+      workspace-root: << parameters.workspace-root >>
+
+
+

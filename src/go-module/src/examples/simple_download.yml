@@ -1,0 +1,26 @@
+description: |
+  Run `go mod download` using cache
+  
+usage:
+  version: 2.1
+
+  executors:
+    golang:
+      docker:
+        - image: circleci/golang:1.11.1-stretch
+
+  orbs:
+    go-module: timakin/go-module@volatile
+
+  workflows:
+    version: 2
+    build:
+      jobs:
+        - go-module/download:
+            executor: golang
+            checkout: true
+            project_name: sample_project
+            attach-workspace: true
+            persist-to-workspace: true
+            vendoring: false
+            workspace-root: /go/src/github.com/timakin/sample_project

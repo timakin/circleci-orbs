@@ -1,0 +1,70 @@
+description: |
+  Run `go mod download` using cache
+
+parameters:
+  project_name:
+    description: "Built project name"
+    type: string
+    default: go-mod-cache
+  checkout:
+    description: >
+      Boolean for whether or not to checkout as a first step. Default is true.
+    type: boolean
+    default: true
+  vendoring:
+    description: >
+      Boolean for whether or not to run `go mod vendor`. Default is false.
+    type: boolean
+    default: false
+  attach-workspace:
+    description: >
+      Boolean for whether or not to attach to an existing workspace. Default
+      is false.
+    type: boolean
+    default: false
+  persist-to-workspace:
+    description: >
+      Boolean for whether or not to persist to a workspace. Default
+      is false.
+    type: boolean
+    default: false
+  workspace-root:
+    description: >
+      Workspace root path that is either an absolute path or a path relative
+      to the working directory. Defaults to '.' (the working directory)
+    type: string
+    default: "."
+steps:
+  - when:
+      condition: << parameters.checkout >>
+      steps:
+        - checkout
+  - when:
+      condition: << parameters.attach-workspace >>
+      steps:
+        - attach_workspace:
+            at: << parameters.workspace-root >>
+  - restore_cache:
+      name: Restore go modules cache
+      key: << parameters.project_name >>-{{ .Branch }}-{{ checksum "go.sum" }}
+  - run:
+      name: Downloading packages
+      command: go mod download
+  - save_cache:
+      name: Saving Cache
+      key: << parameters.project_name >>-{{ .Branch }}-{{ checksum "go.sum" }}
+      paths:
+        - "/go/pkg/mod/cache"
+  - when:
+      condition: << parameters.vendoring >>
+      steps:
+        - run: 
+          name: Vendoring
+          command: go mod vendor
+  - when:
+      condition: << parameters.persist-to-workspace >>
+      steps:
+        - persist_to_workspace:
+          root: << parameters.workspace-root >>
+          paths:
+          - .
