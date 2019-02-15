@@ -36,7 +36,7 @@ workflows:
 
       - orb-tools/pack:
           name: pack-go-module
-          source-dir: src/go-module/src
+          source-dir: src/go-module
           destination-orb-path: packed/go-module-orb.yml
           workspace-path: packed/go-module-orb.yml
           artifact-path: packed/go-module-orb.yml
