@@ -1,57 +1,44 @@
 version: 2.1
 
-executors:
-  cli:
-    docker:
-      - image: circleci/circleci-cli:latest
-  python:
-    docker:
-      - image: python:3.7.0-alpine3.8
+orbs:
+  orb-tools: circleci/orb-tools@3.0.0
+  aws-cli: circleci/aws-cli@0.1.8
+  aws-ecr: circleci/aws-ecr@dev:alpha
+  circle-compare-url: iynere/compare-url@0.4.5
 
-commands:
-  validate_orb:
-    steps:
-      - run:
-          name: Validate orb yaml files
-          command: |
-            ORB_FILES=$(circleci tests glob "src/**/*.yml" | circleci tests split)
-            for f in $ORB_FILES;
-            do
-              echo "Validating $f ..."
-              circleci orb validate $f
-            done
-  install_yamllint:
-    steps:
-      - run:
-          name: Install yamllint
-          command: |
-            pip3 install -U -v yamllint
-  run_yamllint:
-    steps:
-      - run:
-          name: Run yamllint
-          command: |
-            yamllint .
+executors:
+  ci-base:
+    resource_class: small
+    docker:
+      - image: cibuilds/base
+
+  cli:
+    resource_class: small
+    docker:
+      - image: circleci/circleci-cli
+
+  lint-condo:
+    resource_class: small
+    docker:
+      - image: singapore/lint-condo
 
 jobs:
-  validate:
-    executor: cli
-    parallelism: 4
-    steps:
-      - checkout
-      - validate_orb
   lint:
-    executor: python
+    executor: lint-condo
     steps:
       - checkout
-      - install_yamllint
-      - run_yamllint
+      - run: yamllint .
 
 workflows:
-  version: 2
-  main:
+  lint-pack_validate_deploy-dev:
     jobs:
-      - validate:
-          context: org-global
-      - lint:
-          context: org-global
+      - lint
+
+      - orb-tools/pack:
+          name: pack-go-module
+          source-dir: src/go-module/src
+          destination-orb-path: packed/go-module-orb.yml
+          workspace-path: packed/go-module-orb.yml
+          artifact-path: packed/go-module-orb.yml
+          requires:
+            - lint
