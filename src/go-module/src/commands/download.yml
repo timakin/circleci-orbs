@@ -58,7 +58,7 @@ steps:
   - when:
       condition: << parameters.vendoring >>
       steps:
-        - run: 
+        - run:
           name: Vendoring
           command: go mod vendor
   - when:
