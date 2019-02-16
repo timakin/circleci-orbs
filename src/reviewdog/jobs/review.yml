@@ -11,7 +11,7 @@ parameters:
   linters:
     description: "fetch linter tools go get URL."
     type: string
-    default: ""
+    default: "golang.org/x/lint/golint"
 
 steps:
   - review
