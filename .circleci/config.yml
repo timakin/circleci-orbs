@@ -35,25 +35,25 @@ jobs:
       - checkout
 
       - attach_workspace:
-          at: packed
+          at: workspace
 
       - run:
           name: publish dev versions
           command: |
             # for integration testing
-            circleci orb publish packed/reviewdog-orb.yml timakin/reviewdog@dev:alpha --token $CIRCLE_TOKEN
-            circleci orb publish packed/go-module-orb.yml timakin/go-module@dev:alpha --token $CIRCLE_TOKEN
+            circleci orb publish workspace/packed/reviewdog-orb.yml timakin/reviewdog@dev:alpha --token $CIRCLE_TOKEN
+            circleci orb publish workspace/packed/go-module-orb.yml timakin/go-module@dev:alpha --token $CIRCLE_TOKEN
             # for transparency
-            circleci orb publish packed/reviewdog-orb.yml timakin/reviewdog@dev:$CIRCLE_BRANCH-${CIRCLE_SHA1:0:7} --token $CIRCLE_TOKEN
-            circleci orb publish packed/go-module-orb.yml timakin/go-module@dev:$CIRCLE_BRANCH-${CIRCLE_SHA1:0:7} --token $CIRCLE_TOKEN
+            circleci orb publish workspace/packed/reviewdog-orb.yml timakin/reviewdog@dev:$CIRCLE_BRANCH-${CIRCLE_SHA1:0:7} --token $CIRCLE_TOKEN
+            circleci orb publish workspace/packed/go-module-orb.yml timakin/go-module@dev:$CIRCLE_BRANCH-${CIRCLE_SHA1:0:7} --token $CIRCLE_TOKEN
             # for potentially promoting to prod
-            circleci orb publish packed/reviewdog-orb.yml timakin/reviewdog@dev:${CIRCLE_SHA1:0:7} --token $CIRCLE_TOKEN
-            circleci orb publish packed/go-module-orb.yml timakin/go-module@dev:${CIRCLE_SHA1:0:7} --token $CIRCLE_TOKEN
+            circleci orb publish workspace/packed/reviewdog-orb.yml timakin/reviewdog@dev:${CIRCLE_SHA1:0:7} --token $CIRCLE_TOKEN
+            circleci orb publish workspace/packed/go-module-orb.yml timakin/go-module@dev:${CIRCLE_SHA1:0:7} --token $CIRCLE_TOKEN
 
       - store_artifacts:
-          path: packed/reviewdog-orb.yml
+          path: workspace/reviewdog-orb.yml
       - store_artifacts:
-          path: packed/go-module-orb.yml
+          path: workspace/go-module-orb.yml
 
 workflows:
   lint-pack_validate_deploy-dev:
