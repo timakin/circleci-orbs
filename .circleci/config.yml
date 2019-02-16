@@ -51,9 +51,9 @@ jobs:
             circleci orb publish packed/go-module-orb.yml timakin/go-module@dev:${CIRCLE_SHA1:0:7} --token $CIRCLE_TOKEN
 
       - store_artifacts:
-          path:
-            - packed/reviewdog-orb.yml
-            - packed/go-module-orb.yml
+          path: packed/reviewdog-orb.yml
+      - store_artifacts:
+          path: packed/go-module-orb.yml
 
 workflows:
   lint-pack_validate_deploy-dev:
