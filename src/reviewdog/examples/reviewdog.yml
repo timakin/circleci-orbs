@@ -14,6 +14,6 @@ usage:
   workflows:
     build:
       jobs:
-        - reviewdog/run:
+        - reviewdog/review:
             executor: golang
             linters: "golang.org/x/lint/golint github.com/kisielk/errcheck"

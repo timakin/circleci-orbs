@@ -14,4 +14,4 @@ parameters:
     default: ""
 
 steps:
-  - run
+  - review
