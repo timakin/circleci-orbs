@@ -44,6 +44,3 @@ steps:
       attach-workspace: << parameters.attach-workspace >>
       persist-to-workspace: << parameters.persist-to-workspace >>
       workspace-root: << parameters.workspace-root >>
-
-
-
