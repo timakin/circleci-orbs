@@ -42,3 +42,12 @@ workflows:
           artifact-path: packed/go-module-orb.yml
           requires:
             - lint
+
+      - orb-tools/pack:
+          name: pack-reviewdog
+          source-dir: src/reviewdog
+          destination-orb-path: packed/reviewdog-orb.yml
+          workspace-path: packed/reviewdog-orb.yml
+          artifact-path: packed/reviewdog-orb.yml
+          requires:
+            - lint
