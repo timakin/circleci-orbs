@@ -2,47 +2,6 @@ version: 2.1
 
 orbs:
   orb-tools: circleci/orb-tools@7.0.0
-  aws-cli: circleci/aws-cli@0.1.8
-  aws-ecr: circleci/aws-ecr@dev:alpha
-  circle-compare-url: iynere/compare-url@0.4.5
-
-executors:
-  ci-base:
-    resource_class: small
-    docker:
-      - image: cibuilds/base
-
-  cli:
-    resource_class: small
-    docker:
-      - image: circleci/circleci-cli
-
-jobs:
-  publish-dev:
-    executor: cli
-    steps:
-      - checkout
-
-      - attach_workspace:
-          at: workspace
-
-      - run:
-          name: publish dev versions
-          command: |
-            # for integration testing
-            circleci orb publish workspace/packed/reviewdog-orb.yml timakin/reviewdog@dev:alpha --token $CIRCLE_TOKEN
-            circleci orb publish workspace/packed/go-module-orb.yml timakin/go-module@dev:alpha --token $CIRCLE_TOKEN
-            # for transparency
-            circleci orb publish workspace/packed/reviewdog-orb.yml timakin/reviewdog@dev:$CIRCLE_BRANCH-${CIRCLE_SHA1:0:7} --token $CIRCLE_TOKEN
-            circleci orb publish workspace/packed/go-module-orb.yml timakin/go-module@dev:$CIRCLE_BRANCH-${CIRCLE_SHA1:0:7} --token $CIRCLE_TOKEN
-            # for potentially promoting to prod
-            circleci orb publish workspace/packed/reviewdog-orb.yml timakin/reviewdog@dev:${CIRCLE_SHA1:0:7} --token $CIRCLE_TOKEN
-            circleci orb publish workspace/packed/go-module-orb.yml timakin/go-module@dev:${CIRCLE_SHA1:0:7} --token $CIRCLE_TOKEN
-
-      - store_artifacts:
-          path: workspace/reviewdog-orb.yml
-      - store_artifacts:
-          path: workspace/go-module-orb.yml
 
 workflows:
   lint-pack_validate_deploy-dev:
