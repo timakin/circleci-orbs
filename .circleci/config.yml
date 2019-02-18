@@ -29,15 +29,15 @@ workflows:
       - orb-tools/publish-dev:
           name: publish-dev-go-module
           context: orb-publishing
-          orb-name: timakin/reviewdog
-          orb-path: workspace/packed/reviewdog-orb.yml
-          requires:
-            - pack-reviewdog
-
-      - orb-tools/publish-dev:
-          name: publish-dev-go-module
-          context: orb-publishing
           orb-name: timakin/go-module
           orb-path: workspace/packed/go-module-orb.yml
           requires:
             - pack-go-module
+
+      - orb-tools/publish-dev:
+          name: publish-dev-reviewdog
+          context: orb-publishing
+          orb-name: timakin/reviewdog
+          orb-path: workspace/packed/reviewdog-orb.yml
+          requires:
+            - pack-reviewdog
