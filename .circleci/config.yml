@@ -42,7 +42,7 @@ workflows:
           name: trigger-integration-go-module-dev
           attach-workspace: true
           workspace-root: workspace/packed/go-module
-          ssh-fingerprints: 32:6b:64:cf:12:57:c1:39:5b:79:5b:0c:96:46:89:82
+          ssh-fingerprints: 66:9b:a5:ae:52:4d:32:5a:65:29:f1:98:55:38:28:20
           requires:
             - publish-dev-go-module
           filters:
@@ -52,7 +52,7 @@ workflows:
           name: trigger-integration-reviewdog-master
           attach-workspace: true
           workspace-root: workspace/packed/reviewdog
-          ssh-fingerprints: 32:6b:64:cf:12:57:c1:39:5b:79:5b:0c:96:46:89:82
+          ssh-fingerprints: 66:9b:a5:ae:52:4d:32:5a:65:29:f1:98:55:38:28:20
           tag: master
           requires:
             - publish-dev-reviewdog
