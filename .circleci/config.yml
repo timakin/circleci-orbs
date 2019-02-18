@@ -1,43 +1,61 @@
 version: 2.1
 
 orbs:
-  orb-tools: circleci/orb-tools@7.0.0
+  orb-tools: circleci/orb-tools@7.3.0
 
 workflows:
-  lint-pack_validate_deploy-dev:
+  lint_pack-validate_publish-dev:
     jobs:
       - orb-tools/lint
 
       - orb-tools/pack:
           name: pack-go-module
           source-dir: src/go-module
-          destination-orb-path: packed/go-module-orb.yml
-          workspace-path: packed/go-module-orb.yml
-          artifact-path: packed/go-module-orb.yml
+          destination-orb-path: packed/go-module/orb.yml
+          workspace-path: packed/go-module/orb.yml
+          artifact-path: packed/go-module/orb.yml
           requires:
             - orb-tools/lint
-
       - orb-tools/pack:
           name: pack-reviewdog
           source-dir: src/reviewdog
-          destination-orb-path: packed/reviewdog-orb.yml
-          workspace-path: packed/reviewdog-orb.yml
-          artifact-path: packed/reviewdog-orb.yml
+          destination-orb-path: packed/reviewdog/orb.yml
+          workspace-path: packed/reviewdog/orb.yml
+          artifact-path: packed/reviewdog/orb.yml
           requires:
             - orb-tools/lint
-
       - orb-tools/publish-dev:
           name: publish-dev-go-module
           context: orb-publishing
           orb-name: timakin/go-module
-          orb-path: workspace/packed/go-module-orb.yml
+          orb-path: workspace/packed/go-module/orb.yml
           requires:
             - pack-go-module
-
       - orb-tools/publish-dev:
           name: publish-dev-reviewdog
           context: orb-publishing
           orb-name: timakin/reviewdog
-          orb-path: workspace/packed/reviewdog-orb.yml
+          orb-path: workspace/packed/reviewdog/orb.yml
           requires:
             - pack-reviewdog
+      - orb-tools/trigger-integration-workflow:
+          name: trigger-integration-go-module-dev
+          attach-workspace: true
+          workspace-root: workspace/packed/go-module
+          ssh-fingerprints: 32:6b:64:cf:12:57:c1:39:5b:79:5b:0c:96:46:89:82
+          requires:
+            - publish-dev-go-module
+          filters:
+            branches:
+              ignore: master
+      - orb-tools/trigger-integration-workflow:
+          name: trigger-integration-reviewdog-master
+          attach-workspace: true
+          workspace-root: workspace/packed/reviewdog
+          ssh-fingerprints: 32:6b:64:cf:12:57:c1:39:5b:79:5b:0c:96:46:89:82
+          tag: master
+          requires:
+            - publish-dev-reviewdog
+          filters:
+            branches:
+              only: master
