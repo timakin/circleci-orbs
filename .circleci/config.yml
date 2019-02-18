@@ -39,43 +39,24 @@ workflows:
           requires:
             - pack-reviewdog
       - orb-tools/trigger-integration-workflow:
-          name: trigger-integration-go-module-dev
+          name: trigger-integration-dev
           attach-workspace: true
-          workspace-root: workspace/packed/go-module
+          workspace-root: workspace/packed
           ssh-fingerprints: 66:9b:a5:ae:52:4d:32:5a:65:29:f1:98:55:38:28:20
           requires:
             - publish-dev-go-module
-          filters:
-            branches:
-              ignore: master
-      - orb-tools/trigger-integration-workflow:
-          name: trigger-integration-go-module-master
-          attach-workspace: true
-          workspace-root: workspace/packed/go-module
-          ssh-fingerprints: 66:9b:a5:ae:52:4d:32:5a:65:29:f1:98:55:38:28:20
-          tag: master
-          requires:
-            - publish-dev-go-module
-          filters:
-            branches:
-              only: master
-      - orb-tools/trigger-integration-workflow:
-          name: trigger-integration-reviewdog-dev
-          attach-workspace: true
-          workspace-root: workspace/packed/reviewdog
-          ssh-fingerprints: 66:9b:a5:ae:52:4d:32:5a:65:29:f1:98:55:38:28:20
-          requires:
             - publish-dev-reviewdog
           filters:
             branches:
               ignore: master
       - orb-tools/trigger-integration-workflow:
-          name: trigger-integration-reviewdog-master
+          name: trigger-integration-master
           attach-workspace: true
-          workspace-root: workspace/packed/reviewdog
+          workspace-root: workspace/packed
           ssh-fingerprints: 66:9b:a5:ae:52:4d:32:5a:65:29:f1:98:55:38:28:20
           tag: master
           requires:
+            - publish-dev-go-module
             - publish-dev-reviewdog
           filters:
             branches:
