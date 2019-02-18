@@ -34,7 +34,7 @@ parameters:
       to the working directory. Defaults to '.' (the working directory)
     type: string
     default: "."
-
+    
 steps:
   - when:
       condition: << parameters.checkout >>
@@ -60,12 +60,13 @@ steps:
       condition: << parameters.vendoring >>
       steps:
         - run:
-          name: Vendoring
-          command: go mod vendor
+            name: Vendoring
+            command: |
+              go mod vendor
   - when:
       condition: << parameters.persist-to-workspace >>
       steps:
         - persist_to_workspace:
-          root: << parameters.workspace-root >>
-          paths:
-            - .
+            root: << parameters.workspace-root >>
+            paths:
+              - .
