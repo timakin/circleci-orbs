@@ -34,6 +34,7 @@ parameters:
       to the working directory. Defaults to '.' (the working directory)
     type: string
     default: "."
+
 steps:
   - when:
       condition: << parameters.checkout >>
